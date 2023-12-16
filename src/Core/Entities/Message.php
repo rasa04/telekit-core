@@ -45,9 +45,9 @@ class Message
     {
         return $this->getData()['from']['first_name'];
     }
-    public function getUsername()
+    public function getUsername(): ?string
     {
-        return $this->getData()['from']['username'];
+        return $this->getData()['from']['username'] ?? null;
     }
     public function getLangCode()
     {
