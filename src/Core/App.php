@@ -29,7 +29,7 @@ class App
     {
         if (isset($GLOBALS['request'])) {
             $this->request = $GLOBALS['request'];
-            $this->message = new Message($this->request['message']);
+            $this->message = new Message($this->request['message'] ?? []);
             return;
         }
 
