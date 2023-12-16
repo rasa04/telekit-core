@@ -48,7 +48,6 @@ class Serve extends Command
 
             // Process the updates
             if (empty($response['result'])) {
-                sleep(2);
                 continue;
             }
             if (isset($GLOBALS['request']) && $response['result'][0]['update_id'] === $GLOBALS['request']['update_id']) {

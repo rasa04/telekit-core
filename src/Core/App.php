@@ -1,8 +1,6 @@
 <?php
 namespace Core;
 
-use Core\Responses\Interaction;
-use Core\Responses\Trigger;
 use Core\Storage\Storage;
 use Core\Entities\Message;
 

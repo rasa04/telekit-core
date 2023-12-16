@@ -4,7 +4,8 @@ namespace Core\Methods;
 
 use Core\Env;
 use Core\Storage\Storage;
-use Exception;
+use Doctrine\Common\Cache\Psr6\InvalidArgument;
+use GuzzleHttp\Exception\RequestException;
 
 class Message extends Action
 {
@@ -13,30 +14,33 @@ class Message extends Action
     public const METHOD_SEND = 'sendMessage';
     public const METHOD_DELETE = 'deleteMessage';
 
-    /**
-     * @throws Exception
-     */
+
     public function send(array $headers = [], bool $writeLogFile = true, bool $saveDataToJson = true) : array
     {
         if (empty($this->response['chat_id'])) {
-            throw new Exception('Chat ID does not exists');
+            throw new InvalidArgument('Chat ID does not exists');
         }
         if (empty($this->response['text'])) {
-            throw new Exception('Text does not exists');
+            throw new InvalidArgument('Text does not exists');
         }
 
-        $result = $this
-            ->client()
-            ->post(
-                $this->getEndpoint(method: self::METHOD_SEND),
-                [
-                    'headers' => array_merge(["Content-Type" => "application/json"], $headers),
-                    'verify' => false,
-                    'json' => $this->response,
-                ]
-            )
-            ->getBody()
-            ->getContents();
+        try {
+            $result = $this
+                ->client()
+                ->post(
+                    $this->getEndpoint(method: self::METHOD_SEND),
+                    [
+                        'headers' => array_merge(["Content-Type" => "application/json"], $headers),
+                        'verify' => false,
+                        'json' => $this->response,
+                    ]
+                )
+                ->getBody()
+                ->getContents();
+        } catch (RequestException $e) {
+            $this->log($e->getMessage());
+            return [];
+        }
 
         //сохраняем то что бот сам отправляет
         if($writeLogFile) $this->log(json_decode($result, 1));
