@@ -12,7 +12,7 @@ class Storage
 
     private static function getFileLink($file): string
     {
-        return sprintf(self::storage_path() ?? self::$path, $file);
+        return sprintf('%s%s', self::storage_path() ?? self::$path, $file);
     }
 
     public static function get(string $file, $associative = null): array

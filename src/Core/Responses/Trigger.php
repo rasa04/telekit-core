@@ -64,12 +64,12 @@ class Trigger
         return new SendInvoice;
     }
 
-    public function deleteMessage($message_id = null): void
+    public function deleteMessage($messageId = null): void
     {
-        if ($message_id === null) {
-            $message_id = $this->lastMessage['result']['message_id'];
+        if ($messageId === null) {
+            $messageId = $this->lastMessage['result']['message_id'];
         }
-        (new DeleteMessage())->delete($message_id);
+        (new Message())->delete($messageId);
     }
 
     public function defaultAction($request): void
