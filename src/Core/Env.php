@@ -8,11 +8,11 @@ trait Env {
     }
     public static function storage_path(): array|false|string
     {
-        return __DIR__ . "/../storage/";
+        return self::appPath() . "storage/";
     }
     public static function appPath(): string
     {
-        return __DIR__ . "../../../../../";
+        return __DIR__ . "/../../../../../";
     }
     public function gpt_token(): string
     {

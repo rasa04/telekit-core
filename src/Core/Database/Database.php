@@ -14,7 +14,7 @@ class Database
         if ($this->env("DB_DRIVER") === "sqlite") {
             $capsule->addConnection([
                 "driver" => $this->env("DB_DRIVER"),
-                "database" => __DIR__ . "/../../database/database.sqlite",
+                "database" => self::appPath() . "/database/database.sqlite",
             ]);
         }
         elseif (in_array($this->env("DB_DRIVER"), ["mysql", "pgsql"])) {

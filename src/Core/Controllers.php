@@ -10,12 +10,16 @@ use JetBrains\PhpStorm\NoReturn;
 trait Controllers
 {
     use Env;
-    public function writeLogFile(string | array $str, string $file = "message.txt", bool $overwrite = false) : void
+
+    public function log(string|array $log, string $file = "message.txt", bool $overwrite = false) : void
     {
-        $log_file_name = $this->storage_path() . "Controllers.php";
-        $now = date("Y-m-d H:i:s");
-        if ($overwrite) file_put_contents($log_file_name, '');
-        file_put_contents($log_file_name, $now . " " . print_r($str, true) .  "\r\n", FILE_APPEND);
+        file_put_contents(
+            filename: sprintf('%s%s',$this->storage_path(), $file),
+            data: sprintf(
+                '%s%s%s%s', date("Y-m-d H:i:s"), " ", print_r($log, true),  "\r\n"
+            ),
+            flags: $overwrite ? FILE_APPEND : 0
+        );
     }
 
     public function saveFile(bool $withLog = false) : array
@@ -49,7 +53,7 @@ trait Controllers
             $photoPathTG = "https://api.telegram.org/file/bot" . $this->token() . "/" . $fileUrl;
 
             if ($withLog) {
-                $this->writeLogFile($photoPathTG, $withLog, true);
+                $this->log($photoPathTG, $withLog, true);
                 Storage::save($request);
             }
             

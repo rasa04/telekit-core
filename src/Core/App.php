@@ -27,6 +27,7 @@ class App
     {
         if (isset($GLOBALS['request'])) {
             $this->request = $GLOBALS['request'];
+            $this->message = new Message($this->request['message']);
             return;
         }
 
@@ -50,7 +51,7 @@ class App
         $this->runMiddlewares();
 
         if ($writeLogFile && $this->request){
-            $this->writeLogFile($this->request);
+            $this->log($this->request);
         }
         if ($saveDataToJson && $this->request){
             Storage::save($this->request);

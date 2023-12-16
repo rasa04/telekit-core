@@ -39,7 +39,7 @@ class Message extends Action
             ->getContents();
 
         //сохраняем то что бот сам отправляет
-        if($writeLogFile) $this->writeLogFile(json_decode($result, 1));
+        if($writeLogFile) $this->log(json_decode($result, 1));
         if($saveDataToJson) Storage::save(json_decode($result, 1));
 
         return json_decode($result, 1);

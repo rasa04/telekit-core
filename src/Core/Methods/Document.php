@@ -81,7 +81,7 @@ class Document extends Action
         curl_close($curl);
 
         //сохраняем то что бот сам отправляет
-        if($writeLogFile) $this->writeLogFile(json_decode($result, 1));
+        if($writeLogFile) $this->log(json_decode($result, 1));
         if($saveDataToJson) Storage::save(json_decode($result, 1));
     }
 }
