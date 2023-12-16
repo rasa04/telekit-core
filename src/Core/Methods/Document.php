@@ -5,7 +5,7 @@ use Core\Env;
 use Core\Storage\Storage;
 use Exception;
 
-class SendDocument extends SendAction
+class Document extends Action
 {
     use Env;
 

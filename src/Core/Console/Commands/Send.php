@@ -3,7 +3,7 @@
 namespace Core\Console\Commands;
 
 use Core\Database\Database;
-use Core\Methods\SendMessage;
+use Core\Methods\Message;
 use Database\models\Chat;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -33,10 +33,10 @@ class Send extends Command
                 $output->getFormatter()->setStyle("yellow-bg", new OutputFormatterStyle('black', "yellow"));
                 $output->writeln("<yellow-bg> WARING: You didn't specify the message </yellow-bg>");
             }
-            $chat_id = $options["to"];
+            $chatId = $options["to"];
             $message = $options["message"] ?? "Hi! It's test message from " . getenv("APP_NAME");
-            (new SendMessage)
-                ->chat_id($chat_id)
+            (new Message)
+                ->chatId($chatId)
                 ->text($message)
                 ->send();
         }
@@ -47,8 +47,8 @@ class Send extends Command
 
             foreach ($chats as $chat) {
                 try {
-                    (new SendMessage)
-                        ->chat_id($chat)
+                    (new Message)
+                        ->chatId($chat)
                         ->text($message)
                         ->send();
                     $output->getFormatter()->setStyle("green-bg", new OutputFormatterStyle('black', "green"));

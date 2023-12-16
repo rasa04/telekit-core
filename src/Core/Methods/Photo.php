@@ -5,7 +5,7 @@ use Core\Env;
 use Core\Storage\Storage;
 use Exception;
 
-class SendPhoto extends SendAction
+class Photo extends Action
 {
     use Env;
     /**

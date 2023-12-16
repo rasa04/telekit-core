@@ -6,7 +6,7 @@ use Core\Storage\Storage;
 use CURLFile;
 use Exception;
 
-class SendMediaGroup extends SendAction
+class MediaGroup extends Action
 {
     use Env;
     /**

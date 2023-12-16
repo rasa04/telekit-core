@@ -8,18 +8,26 @@ class Storage
 {
     use Env;
 
-    static string $path = __DIR__ . "/../../storage/";
+    private static string $path = __DIR__ . "/../../storage/";
 
-    static function get(string $file, $associative = null): array
+    private static function getFileLink($file): string
     {
-        return json_decode(file_get_contents(((new Storage)->storage_path() ?? self::$path) . $file), $associative) ?? [];
+        return sprintf(self::storage_path() ?? self::$path, $file);
     }
 
-    static function save(array $data, string $file = "data.json", bool $overwrite = false): void
+    public static function get(string $file, $associative = null): array
     {
-        $file_link = ((new Storage)->storage_path() ?? self::$path) . $file;
-        $file_content = json_decode(file_get_contents($file_link)) ?? [];
-        (!$overwrite) ? $file_content[] = $data : $file_content = $data;
-        file_put_contents($file_link, json_encode($file_content));
+        return json_decode(file_get_contents(self::getFileLink($file)), $associative) ?? [];
+    }
+
+    public static function save(array $data, string $file = "data.json", bool $overwrite = false): void
+    {
+        $content = self::get($file);
+
+        ($overwrite)
+            ? $content = $data
+            : $content[] = $data;
+
+        file_put_contents(self::getFileLink($file), json_encode($content));
     }
 }

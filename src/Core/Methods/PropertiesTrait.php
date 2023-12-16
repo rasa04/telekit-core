@@ -8,16 +8,16 @@ trait PropertiesTrait
     /**
      * Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      */
-    public function chat_id(int $chat_id) : object
+    public function chatId(int $id) : object
     {
-        $this->response['chat_id'] = $chat_id;
+        $this->response['chat_id'] = $id;
         return $this;
     }
 
     /**
      * Mode for parsing entities in the message text. See formatting options for more details.
      */
-    public function parse_mode(string $parse_mode = 'html') : object
+    public function parseMode(string $parse_mode = 'html') : object
     {
         $this->response['parse_mode'] = $parse_mode;
         return $this;

@@ -16,7 +16,7 @@ trait Env {
     }
     public static function app_path(): string
     {
-        return __DIR__ . "/..";
+        return __DIR__ . "/pets";
     }
     public function gpt_token(): string
     {

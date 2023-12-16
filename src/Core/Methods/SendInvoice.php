@@ -9,7 +9,7 @@ class SendInvoice
 {
     use Env;
 
-    private static int $chat_id;
+    private static int $chatId;
     private static string $title;
     private static string $description;
     private static string $payload;
@@ -18,12 +18,12 @@ class SendInvoice
 
     public function __construct()
     {
-        self::$chat_id = $GLOBALS['request']['message']['from']['id'];
+        self::$chatId = $GLOBALS['request']['message']['from']['id'];
     }
 
-    public static function chat_id(int $chat_id): SendInvoice
+    public static function chatId(int $chatId): SendInvoice
     {
-        self::$chat_id = $chat_id;
+        self::$chatId = $chatId;
         return new static;
     }
     public static function title(string $title): SendInvoice
@@ -61,7 +61,7 @@ class SendInvoice
             'headers' => ["Content-Type" => "application/json"],
             'verify' => false,
             'json' => [
-                'chat_id' => self::$chat_id,
+                'chat_id' => self::$chatId,
                 'title' => self::$title,
                 'description' => self::$description,
                 'provider_token' => \env('CLICK_TOKEN'),

@@ -1,7 +1,7 @@
 <?php
 namespace Core;
 
-use Core\Methods\SendMessage;
+use Core\Methods\Message;
 use Core\Storage\Storage;
 use Database\models\Chat;
 use GuzzleHttp\Client;
@@ -12,7 +12,7 @@ trait Controllers
     use Env;
     public function writeLogFile(string | array $str, string $file = "message.txt", bool $overwrite = false) : void
     {
-        $log_file_name = $this->storage_path() . "$file";
+        $log_file_name = $this->storage_path() . "Controllers.php";
         $now = date("Y-m-d H:i:s");
         if ($overwrite) file_put_contents($log_file_name, '');
         file_put_contents($log_file_name, $now . " " . print_r($str, true) .  "\r\n", FILE_APPEND);
@@ -122,9 +122,9 @@ trait Controllers
         return (strlen($result) < 4000) ? $result : substr($result, 0, 4000) . "...";
     }
 
-    #[NoReturn] public function dd(string $data, bool $disable_notification = true, bool $allow_sending_without_reply = true) : void
+    #[NoReturn] public function sendLog(string $data, bool $disable_notification = true, bool $allow_sending_without_reply = true) : void
     {
-        (new SendMessage)->chat_id($GLOBALS['request']['message']['chat']['id']
+        (new Message)->chatId($GLOBALS['request']['message']['chat']['id']
                 ?? $GLOBALS['request']['callback_query']['message']['chat']['id']
                 ?? $GLOBALS['request']['callback_query']['from']['id']
                 ?? $GLOBALS['request']['inline_query']['from']['id']

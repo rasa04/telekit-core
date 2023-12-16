@@ -5,7 +5,7 @@ namespace Core\Methods;
 use Core\Env;
 use GuzzleHttp\Client;
 
-class answerPreCheckoutQuery
+class AnswerPreCheckoutQuery
 {
     use Env;
 
