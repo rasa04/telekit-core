@@ -134,10 +134,10 @@ class App
         if ($this->isHandled) {
             $this->isHandled = false;
         } else {
-            if (isset($this->request['message']['text'])) {
-                (new Trigger())->defaultAction($this->request);
-            } elseif (isset($this->request['inline_query']['query'])) {
-                (new Interaction())->defaultAction($this->request);
+            if (isset($this->request['message']['text']) && self::$defaults['trigger'] !== null) {
+                new self::$defaults['trigger']($this->request, $this->message ?? null);
+            } elseif (isset($this->request['inline_query']['query']) && self::$defaults['inline_query'] !== null) {
+                new self::$defaults['inline_query']($this->request, $this->message ?? null);
             }
         }
     }
