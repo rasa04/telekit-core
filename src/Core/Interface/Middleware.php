@@ -6,5 +6,5 @@ use Core\Entities\Message;
 
 interface Middleware
 {
-    public function handle(array $request, Message $message): void;
+    public function handle(array $request, ?Message $message): void;
 }

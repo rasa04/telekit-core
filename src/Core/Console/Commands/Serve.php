@@ -41,31 +41,33 @@ class Serve extends Command
             $path = "https://api.telegram.org/bot" . self::token() . "/getUpdates?offset=" . self::$lastUpdate;
             try {
                 $response = json_decode($client->get($path, ["verify" => false])->getBody()->getContents(), 1);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 sleep(2);
                 $response = json_decode($client->get($path, ["verify" => false])->getBody()->getContents(), 1);
             }
 
             // Process the updates
-
             if (empty($response['result'])) {
                 sleep(2);
                 continue;
             }
-            elseif (isset($GLOBALS['request']) && $response['result'][0]['update_id'] === $GLOBALS['request']['update_id']) {
-                self::$lastUpdate+=1;
+            if (isset($GLOBALS['request']) && $response['result'][0]['update_id'] === $GLOBALS['request']['update_id']) {
+                self::$lastUpdate += 1;
                 continue;
             }
-            else {
-                $GLOBALS['request'] = $response['result'][0];
-                require 'index.php';
-            }
+
+            $GLOBALS['request'] = $response['result'][0];
+            require 'index.php';
             $io = new SymfonyStyle($input, $output);
             var_dump($GLOBALS['request']);
             self::$lastUpdate+=1;
             $output->writeln("<green-bg> SUCCESSFUL HANDLED </green-bg>");
             sleep(2);
         }
+    }
+
+    private function GetUpdates()
+    {
+
     }
 }

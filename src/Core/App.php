@@ -60,7 +60,7 @@ class App
     public function runMiddlewares(): void
     {
         foreach(static::$middlewares as $middleware) {
-            (new $middleware())->handle();
+            (new $middleware($this->request, $this->message ?? null))->handle();
         }
     }
     public static function middlewares(array $middlewares): App
