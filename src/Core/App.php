@@ -18,6 +18,10 @@ class App
     private static array $voices;
     private static array $invoices;
     private static array $middlewares;
+    private static array $defaults = [
+        'trigger' => null,
+        'inline_query' => null,
+    ];
 
     private bool $isHandled = false;
     private array $request = [];
@@ -70,13 +74,17 @@ class App
         static::$middlewares = $middlewares;
         return new static;
     }
-    public static function triggers(array $triggers): App
+    public static function triggers(array $triggers, ?string $default = null): App
     {
         static::$triggers = $triggers;
+        if ($default !== null) {
+            self::$defaults['trigger'] = $default;
+        }
         return new static;
     }
 
-    public static function callbacks(array $callbackData): App {
+    public static function callbacks(array $callbackData): App
+    {
         static::$callbackData = $callbackData;
         return new static;
     }
@@ -88,17 +96,23 @@ class App
      * @param $inlineQueries : array
      * @return App : object context
      */
-    public static function inlineQueries(array $inlineQueries): App {
+    public static function inlineQueries(array $inlineQueries, ?string $default = null): App
+    {
         static::$inlineQueries = $inlineQueries;
+        if ($default !== null) {
+            self::$defaults['inline_query'] = $default;
+        }
         return new static;
     }
 
-    public static function games(array $games): App {
+    public static function games(array $games): App
+    {
         static::$games = $games;
         return new static;
     }
 
-    public static function voices(array $voices): App {
+    public static function voices(array $voices): App
+    {
         static::$voices = $voices;
         return new static;
     }

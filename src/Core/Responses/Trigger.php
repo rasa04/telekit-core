@@ -17,14 +17,6 @@ abstract class Trigger
     use Env;
 
     public array $lastMessage;
-    private array $options = [];
-
-    public function __construct(callable $defaultAction = null)
-    {
-        if ($defaultAction !== null) {
-            $this->options['default_action'] = $defaultAction;
-        }
-    }
 
     public function request(): array
     {
@@ -70,20 +62,5 @@ abstract class Trigger
             $messageId = $this->lastMessage['result']['message_id'];
         }
         (new Message())->delete($messageId);
-    }
-
-    public function defaultAction($request): void
-    {
-        $requestMessage = $request['message'];
-
-        // If user passed self default action, run it.
-        if (isset($this->options['default_action'])) {
-            $this->options['default_action']($requestMessage);
-            return;
-        }
-
-//        if ($request['message']['chat']['id'] === $request['message']['from']['id']) {
-//            new OpenAI($request);
-//        }
     }
 }
