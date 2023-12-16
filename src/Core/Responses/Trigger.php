@@ -11,7 +11,7 @@ use Core\Methods\MediaGroup;
 use Core\Methods\Message;
 use Core\Methods\Photo;
 
-class Trigger
+abstract class Trigger
 {
     use Controllers;
     use Env;

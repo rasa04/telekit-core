@@ -6,7 +6,7 @@ use Core\Controllers;
 use Core\Env;
 use Core\Methods\AnswerInlineQuery;
 
-class Interaction
+abstract class Interaction
 {
     use Controllers;
     use Env;

@@ -6,7 +6,7 @@ use Core\Controllers;
 use Core\Env;
 use Core\Methods\Message;
 
-class Callback
+abstract class Callback
 {
     use Controllers;
     use Env;

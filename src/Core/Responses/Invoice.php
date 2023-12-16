@@ -5,7 +5,7 @@ namespace Core\Responses;
 use Core\Methods\AnswerPreCheckoutQuery;
 use Core\Methods\Message;
 
-class Invoice
+abstract class Invoice
 {
     public static function invoice(): array
     {

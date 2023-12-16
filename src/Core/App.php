@@ -132,7 +132,7 @@ class App
     {
         foreach(static::$triggers as $triggerSymbol => $triggerClass) {
             if (preg_match("#$triggerSymbol#", $this->message->getText(withLowerCase: true))) {
-                new $triggerClass($this->request);
+                new $triggerClass($this->request, $this->message ?? null);
                 $this->isHandled = true;
             }
         }
