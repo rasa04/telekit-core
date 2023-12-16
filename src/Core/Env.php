@@ -10,13 +10,9 @@ trait Env {
     {
         return __DIR__ . "/../storage/";
     }
-    public static function path(): string
+    public static function appPath(): string
     {
-        return __DIR__;
-    }
-    public static function app_path(): string
-    {
-        return __DIR__ . "/pets";
+        return __DIR__ . "../../../../../";
     }
     public function gpt_token(): string
     {

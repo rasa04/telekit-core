@@ -26,12 +26,13 @@ class App
     private function setRequest(): void
     {
         if (isset($GLOBALS['request'])) {
+            $this->request = $GLOBALS['request'];
             return;
         }
 
         $request = json_decode(file_get_contents('php://input'), true);
         if (empty($request)) {
-            require_once sprintf('%s%s',$this->app_path(), '/admin.php');
+            require_once sprintf('%s%s',$this->appPath(), '/admin.php');
         }
 
         $this->request = $request;
@@ -60,7 +61,7 @@ class App
     public function runMiddlewares(): void
     {
         foreach(static::$middlewares as $middleware) {
-            (new $middleware($this->request, $this->message ?? null))->handle();
+            (new $middleware())->handle($this->request, $this->message ?? null);
         }
     }
     public static function middlewares(array $middlewares): App
@@ -78,7 +79,7 @@ class App
         static::$callbackData = $callbackData;
         return new static;
     }
-    
+
     /**
      * You can trace and response to all queries first in Inlines\DefaultAct class
      * Be careful that the new classes for processing inline Queries do not contradict each other
@@ -105,7 +106,7 @@ class App
         static::$invoices = $invoices;
         return new static;
     }
-    
+
     private function match() : void
     {
         if     (isset($this->request['message']['text']))        $this->matchTriggers();

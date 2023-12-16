@@ -9,16 +9,16 @@ trait Paths
     use Env;
     public static function samplesPath(): string
     {
-        return self::app_path() . "/Core/Console/Samples/";
+        return __DIR__ . "/Core/Console/Samples/";
     }
 
     public static function responsesPath(): string
     {
-        return self::app_path() ."/Responses/";
+        return self::appPath() ."Responses/";
     }
 
     public static function databasePath(): string
     {
-        return self::app_path() . "/database/";
+        return self::appPath() . "database/";
     }
 }

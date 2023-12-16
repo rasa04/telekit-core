@@ -28,10 +28,10 @@ class Responses extends Command
                     str_replace('.php', '', $invoice ?? '')
                 ];
             },
-            scandir(self::app_path() . '/responses/Triggers'),
-            scandir(self::app_path() . '/responses/Inlines'),
-            scandir(self::app_path() . '/responses/Callbacks'),
-            scandir(self::app_path() . '/responses/Invoices'),
+            scandir(self::appPath() . 'responses/Triggers'),
+            scandir(self::appPath() . 'responses/Inlines'),
+            scandir(self::appPath() . 'responses/Callbacks'),
+            scandir(self::appPath() . 'responses/Invoices'),
         );
 
         $table = new Table($output);
