@@ -1,0 +1,31 @@
+{
+  "name": "rasa/telekit-core",
+  "description": "Core of telekit",
+  "homepage": "https://matesite.uz",
+  "keywords": ["telekit", "rasa"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Abdurasul Khuzhamberdiyev",
+      "email": "abdurasul2004.04@gmail.com",
+      "homepage": "https://matesite.uz",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "guzzlehttp/guzzle": "^6.5",
+    "vlucas/phpdotenv": "^5.5",
+    "illuminate/database": "^10.9",
+    "illuminate/collections": "^10.9",
+    "doctrine/dbal": "^3.6",
+    "ext-curl": "*",
+    "ext-pdo": "*",
+    "symfony/console": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "src/Core/"
+    }
+  }
+}
