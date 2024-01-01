@@ -46,7 +46,7 @@ class SendMessage extends Method
             Storage::save($response);
         }
 
-        return new Message($response);
+        return new Message($response['result']);
     }
 
     /**
