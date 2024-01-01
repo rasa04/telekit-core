@@ -8,13 +8,13 @@ namespace Core\API\Types;
  */
 class Message extends Type implements MessageInterface
 {
-    private int $date;
-    private Chat $chat;
-    private ?string $text = null;
-    private ?User $from = null;
-    private ?MessageId $messageId = null;
-    private ?Voice $voice = null;
-    private ?array $entities = null;
+    protected int $date;
+    protected Chat $chat;
+    protected ?string $text = null;
+    protected ?User $from = null;
+    protected ?MessageId $messageId = null;
+    protected ?Voice $voice = null;
+    protected ?array $entities = null;
 
     public function __construct(array $data)
     {

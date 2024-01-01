@@ -8,11 +8,11 @@ namespace Core\API\Types;
  */
 class Voice extends Type
 {
-    private string $fileId;
-    private string $fileUniqueId;
-    private int $duration;
-    private ?string $mimeType = null;
-    private ?int $fileSize = null;
+    protected string $fileId;
+    protected string $fileUniqueId;
+    protected int $duration;
+    protected ?string $mimeType = null;
+    protected ?int $fileSize = null;
 
     public function __construct(array $data)
     {

@@ -8,11 +8,11 @@ namespace Core\API\Types;
  */
 class User extends Type
 {
-    private int $id;
-    private string $firstName;
-    private ?string $lastName;
-    private ?string $username;
-    private ?string $languageCode;
+    protected int $id;
+    protected string $firstName;
+    protected ?string $lastName;
+    protected ?string $username;
+    protected ?string $languageCode;
 
     public function __construct(array $data)
     {

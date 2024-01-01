@@ -9,8 +9,8 @@ namespace Core\API\Types;
 class InaccessibleMessage extends Type implements MessageInterface
 {
     public const DATE = 0;
-    private Chat $chat;
-    private MessageId $messageId;
+    protected Chat $chat;
+    protected MessageId $messageId;
     public function __construct(array $data)
     {
         $this->set('chat', $data['chat']);

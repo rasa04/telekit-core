@@ -12,13 +12,13 @@ namespace Core\API\Types;
  */
 class CallbackQuery extends Type
 {
-    private string $id;
-    private User $from;
-    private ?Message $message;
-    private ?string $inlineMessageId;
-    private string $chatInstance;
-    private ?string $data;
-    private ?string $gameShortName;
+    protected string $id;
+    protected User $from;
+    protected ?Message $message;
+    protected ?string $inlineMessageId;
+    protected string $chatInstance;
+    protected ?string $data;
+    protected ?string $gameShortName;
 
     public function __construct(array $data)
     {

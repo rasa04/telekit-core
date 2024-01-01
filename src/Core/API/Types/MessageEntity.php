@@ -29,12 +29,12 @@ class MessageEntity extends Type
         'custom_emoji'
     ];
 
-    private string $type;
-    private int $offset;
-    private int $length;
-    private ?string $url;
-    private ?User $user;
-    private ?string $language;
+    protected string $type;
+    protected int $offset;
+    protected int $length;
+    protected ?string $url;
+    protected ?User $user;
+    protected ?string $language;
 
     public function __construct(array $data)
     {

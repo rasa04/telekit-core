@@ -11,12 +11,12 @@ class Chat extends Type
     public const TYPE_PRIVATE = 'private';
     public const TYPE_GROUP = 'group';
     public const TYPE_SUPERGROUP = 'supergroup';
-    private int $id;
-    private string $type;
-    private ?string $title;
-    private ?string $username;
-    private ?string $firstName;
-    private ?string $lastName;
+    protected int $id;
+    protected string $type;
+    protected ?string $title;
+    protected ?string $username;
+    protected ?string $firstName;
+    protected ?string $lastName;
 
     public function __construct(array $data)
     {
