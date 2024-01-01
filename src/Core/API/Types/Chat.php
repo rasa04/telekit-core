@@ -76,12 +76,12 @@ class Chat extends Type
     public function toArray(): array
     {
         return [
-            'id' => $this->id(),
-            'type' => $this->type(),
-            'title' => $this->title(),
-            'username' => $this->username(),
-            'first_name' => $this->firstName,
-            'last_name' => $this->lastName,
+            'id' => $this->get('id'),
+            'type' => $this->get('type'),
+            'title' => $this->get('title'),
+            'username' => $this->get('username'),
+            'first_name' => $this->get('firstName'),
+            'last_name' => $this->get('firstName'),
         ];
     }
 }

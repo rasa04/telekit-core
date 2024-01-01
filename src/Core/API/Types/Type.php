@@ -14,11 +14,11 @@ abstract class Type
             $this->$propertyName = $value;
         }
 
-        return $this->$propertyName;
+        return $this->$propertyName ?? null;
     }
 
     public function get(string $propertyName): mixed
     {
-        return $this->$propertyName;
+        return $this->$propertyName ?? null;
     }
 }
