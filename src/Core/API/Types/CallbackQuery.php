@@ -31,6 +31,11 @@ class CallbackQuery extends Type
         $this->gameShortName = $data['game_short_name'] ?? null;
     }
 
+    public function data(string $data = null): string
+    {
+        return $this->set($data);
+    }
+
     public function toArray(): array
     {
         $callbackQuery = [

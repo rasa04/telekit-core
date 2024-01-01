@@ -53,11 +53,11 @@ class Message extends Type implements MessageInterface
         return $this->set('from', $from);
     }
 
-    public function text(?string $text = null, bool $withLowerCase = false): string
+    public function text(?string $text = null, bool $withLowerCase = false): ?string
     {
         $text = $this->set(propertyName: 'text', value: $text);
 
-        return $withLowerCase ? strtolower($text) : $text;
+        return $withLowerCase && $text !== null ? strtolower($text) : $text;
     }
 
     public function date(): int

@@ -8,7 +8,7 @@ namespace Core\API\Types;
  */
 class MessageId extends Type
 {
-    private int $messageId;
+    protected int $messageId;
 
     public function __construct(int $messageId)
     {

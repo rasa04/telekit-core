@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Core\API\Types\CallbackQuery;
 use Core\API\Types\Message;
 use Core\Storage\Storage;
 
@@ -23,23 +24,30 @@ class App
 
     private bool $isHandled = false;
     private array $request = [];
-    private Message $message;
+    private ?Message $message = null;
+    private ?CallbackQuery $callbackQuery = null;
+    private int $updateId;
 
-    private function setRequest(): void
+    private function setVariables(): void
     {
-        if (isset($GLOBALS['request'])) {
+        $request = json_decode(file_get_contents('php://input'), true);
+        if (isset($GLOBALS['request'])) { // Polling
             $this->request = $GLOBALS['request'];
-            $this->message = new Message($this->request['message'] ?? []);
+        } elseif (!empty($request)) { // Hooks
+            $this->request = $request;
+        } else { // Admin
+            require_once sprintf('%s%s',$this->appPath(), '/admin.php');
             return;
         }
 
-        $request = json_decode(file_get_contents('php://input'), true);
-        if (empty($request)) {
-            require_once sprintf('%s%s',$this->appPath(), '/admin.php');
-        } else {
-            $this->request = $request;
-        }
+        $this->updateId = $request['update_id'];
 
+        if (isset($this->request['message'])) {
+            $this->message = new Message($this->request['message']);
+        }
+        if (isset($this->request['callback_query'])) {
+            $this->callbackQuery = new CallbackQuery($this->request['callback_query']);
+        }
     }
 
     public function handle(bool $writeLogs = true, bool $saveDataToJson = true) : void
@@ -50,11 +58,11 @@ class App
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
 
-        $this->setRequest();
+        $this->setVariables();
         $this->runMiddlewares();
 
         if ($writeLogs && $this->request) {
-            $this->log()->info(json_encode($this->request));
+            $this->log()->info('handling message: ', $this->request);
         }
         if ($saveDataToJson && $this->request){
             Storage::save($this->request);
@@ -65,7 +73,12 @@ class App
     public function runMiddlewares(): void
     {
         foreach(static::$middlewares as $middleware) {
-            (new $middleware())->handle($this->request, $this->message ?? null);
+            (new $middleware)
+                ->handle(
+                    $this->request,
+                    $this->message ?? null,
+                    $this->callbackQuery ?? null
+                );
         }
     }
     public static function middlewares(array $middlewares): App
@@ -123,9 +136,13 @@ class App
 
     private function match() : void
     {
-        if     (isset($this->request['message']['text']))        $this->matchTriggers();
-        elseif (isset($this->request['message']['voice']))       $this->matchVoices();
-        elseif (isset($this->request['callback_query']['data'])) $this->matchCallbackQueries();
+        if (isset($this->message) && $this->message->text() !== null) {
+            $this->matchTriggers();
+        } elseif (isset($this->message) && $this->message->voice() !== null) {
+            $this->matchVoices();
+        } elseif (isset($this->callbackQuery) && $this->callbackQuery->data() !== null) {
+            $this->matchCallbackQueries();
+        }
         elseif (isset($this->request['inline_query']['query']))  $this->matchInlineQueries();
         elseif (isset($this->request['pre_checkout_query']))     $this->matchInvoices();
         elseif (isset($this->request['game_short_name']))        $this->matchGames();
@@ -145,7 +162,7 @@ class App
     {
         foreach(static::$triggers as $triggerSymbol => $triggerClass) {
             if (preg_match("#$triggerSymbol#", $this->message->text(withLowerCase: true))) {
-                new $triggerClass($this->request, $this->message ?? null);
+                new $triggerClass($this->request, $this->message ?? null, $this->callbackQuery ?? null);
                 $this->isHandled = true;
             }
         }
@@ -178,7 +195,7 @@ class App
     private function matchVoices(): void
     {
         foreach(static::$voices as $voiceHandler) {
-            new $voiceHandler($this->request);
+            new $voiceHandler($this->request, $this->message ?? null, $this->callbackQuery ?? null);
             $this->isHandled = true;
         }
     }
