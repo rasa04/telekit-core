@@ -33,7 +33,7 @@ abstract class Method
         return sprintf('%s%s%s%s',self::API_ENDPOINT, $this->token(), "/", static::METHOD);
     }
 
-    public function request(): array
+    public function request(): mixed
     {
         return json_decode(
             json: (new Client())

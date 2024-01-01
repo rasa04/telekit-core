@@ -35,6 +35,7 @@ class App
             $this->request = $GLOBALS['request'];
         } elseif (!empty($request)) { // Hooks
             $this->request = $request;
+            $GLOBALS['request'] = $this->request;
         } else { // Admin
             require_once sprintf('%s%s',$this->appPath(), '/admin.php');
             return;

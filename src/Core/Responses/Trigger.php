@@ -8,16 +8,17 @@ use Core\API\Methods\Message\DeleteMessage;
 use Core\API\Methods\Message\SendMessage;
 use Core\API\Methods\Photo;
 use Core\API\Methods\SendInvoice;
+use Core\API\Types\Message;
+use Core\Exceptions\InvalidRequiredParameterException;
 use Core\Helpers;
 use Core\Env;
-use Core\Exceptions\InvalidMethodException;
 
 abstract class Trigger
 {
     use Helpers;
     use Env;
 
-    public array $lastMessage;
+    public Message $lastMessage;
 
     public function request(): array
     {
@@ -41,15 +42,15 @@ abstract class Trigger
     }
 
     /**
-     * @throws InvalidMethodException
+     * @throws InvalidRequiredParameterException
      */
     public function replyMessage(string $text): void
     {
         $this->lastMessage = (new SendMessage)
-            ->chatId($GLOBALS['request']['message']['chat']['id'])
+            ->chatId($GLOBALS['request']['message']['chat']['id'] ?? $this->lastMessage?->chat()->id())
             ->text($text)
             ->parseMode()
-            ->send();
+            ->handle();
     }
 
     public function requestMessage(): array
@@ -62,13 +63,10 @@ abstract class Trigger
         return new SendInvoice;
     }
 
-    /**
-     * @throws InvalidMethodException
-     */
     public function deleteMessage($messageId = null): void
     {
         if ($messageId === null) {
-            $messageId = $this->lastMessage['result']['message_id'];
+            $messageId = $this->lastMessage->messageId();
         }
         (new DeleteMessage())->handle($messageId);
     }
