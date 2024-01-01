@@ -31,7 +31,8 @@ class DeleteMessage extends Method
             'chat_id' => $this->response['chat_id'] ?? $GLOBALS['request']['message']['chat']['id'],
             'message_id' => $messageId ?? $GLOBALS['request']['message']['message_id']
         ]);
-
-        return $this->request();
+        $result = $this->request();
+        $this->log()->info('Message deleted: ', $result);
+        return $result['result'];
     }
 }
