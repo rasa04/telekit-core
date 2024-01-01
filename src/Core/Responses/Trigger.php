@@ -2,14 +2,15 @@
 
 namespace Core\Responses;
 
+use Core\API\Methods\Document;
+use Core\API\Methods\MediaGroup;
+use Core\API\Methods\Message\DeleteMessage;
+use Core\API\Methods\Message\SendMessage;
+use Core\API\Methods\Photo;
+use Core\API\Methods\SendInvoice;
 use Core\Controllers;
 use Core\Env;
-use Core\Methods\DeleteMessage;
-use Core\Methods\Document;
-use Core\Methods\SendInvoice;
-use Core\Methods\MediaGroup;
-use Core\Methods\Message;
-use Core\Methods\Photo;
+use Core\Exceptions\InvalidMethodException;
 
 abstract class Trigger
 {
@@ -22,9 +23,9 @@ abstract class Trigger
     {
         return $GLOBALS['request'];
     }
-    public function sendMessage(): Message
+    public function sendMessage(): SendMessage
     {
-        return new Message;
+        return new SendMessage;
     }
     public function photo(): Photo
     {
@@ -38,14 +39,19 @@ abstract class Trigger
     {
         return new MediaGroup;
     }
+
+    /**
+     * @throws InvalidMethodException
+     */
     public function replyMessage(string $text): void
     {
-        $this->lastMessage = (new Message)
+        $this->lastMessage = (new SendMessage)
             ->chatId($GLOBALS['request']['message']['chat']['id'])
             ->text($text)
             ->parseMode()
             ->send();
     }
+
     public function requestMessage(): array
     {
         return $GLOBALS['request']['message'];
@@ -56,11 +62,14 @@ abstract class Trigger
         return new SendInvoice;
     }
 
+    /**
+     * @throws InvalidMethodException
+     */
     public function deleteMessage($messageId = null): void
     {
         if ($messageId === null) {
             $messageId = $this->lastMessage['result']['message_id'];
         }
-        (new Message())->delete($messageId);
+        (new DeleteMessage())->handle($messageId);
     }
 }

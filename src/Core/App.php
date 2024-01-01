@@ -1,8 +1,8 @@
 <?php
 namespace Core;
 
+use Core\API\Types\Message;
 use Core\Storage\Storage;
-use Core\Entities\Message;
 
 class App
 {
@@ -41,7 +41,7 @@ class App
         $this->request = $request;
     }
 
-    public function handle(bool $writeLogFile = true, bool $saveDataToJson = true) : void
+    public function handle(bool $writeLogs = true, bool $saveDataToJson = true) : void
     {
         date_default_timezone_set($this->time_zone());
         ini_set('error_reporting', E_ALL);
@@ -52,8 +52,8 @@ class App
         $this->setRequest();
         $this->runMiddlewares();
 
-        if ($writeLogFile && $this->request){
-            $this->log($this->request);
+        if ($writeLogs && $this->request) {
+            $this->log()->info(json_encode($this->request));
         }
         if ($saveDataToJson && $this->request){
             Storage::save($this->request);
@@ -143,7 +143,7 @@ class App
     private function matchTriggers(): void
     {
         foreach(static::$triggers as $triggerSymbol => $triggerClass) {
-            if (preg_match("#$triggerSymbol#", $this->message->getText(withLowerCase: true))) {
+            if (preg_match("#$triggerSymbol#", $this->message->text(withLowerCase: true))) {
                 new $triggerClass($this->request, $this->message ?? null);
                 $this->isHandled = true;
             }

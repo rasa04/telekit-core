@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Methods;
+namespace Core\API\Methods;
 
 use Core\Env;
 use GuzzleHttp\Client;

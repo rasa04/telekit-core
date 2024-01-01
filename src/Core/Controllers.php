@@ -1,25 +1,24 @@
 <?php
 namespace Core;
 
-use Core\Methods\Message;
+use Core\API\Methods\Message\SendMessage;
+use Core\Exceptions\InvalidRequiredParameterException;
 use Core\Storage\Storage;
 use Database\models\Chat;
-use GuzzleHttp\Client;
 use JetBrains\PhpStorm\NoReturn;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 trait Controllers
 {
     use Env;
 
-    public function log(string|array $log, string $file = "message.txt", bool $overwrite = false) : void
+    public function log(string $file = "logs.log") : Logger
     {
-        file_put_contents(
-            filename: sprintf('%s%s',$this->storage_path(), $file),
-            data: sprintf(
-                '%s%s%s%s', date("Y-m-d H:i:s"), " ", print_r($log, true),  "\r\n"
-            ),
-            flags: $overwrite ? FILE_APPEND : 0
-        );
+        return (new Logger('telekit-core'))
+            ->pushHandler(
+                new StreamHandler(sprintf('%s%s',$this->storage_path(), $file))
+            );
     }
 
     public function saveFile(bool $withLog = false) : array
@@ -53,7 +52,7 @@ trait Controllers
             $photoPathTG = "https://api.telegram.org/file/bot" . $this->token() . "/" . $fileUrl;
 
             if ($withLog) {
-                $this->log($photoPathTG, $withLog, true);
+                $this->log()->info($photoPathTG);
                 Storage::save($request);
             }
             
@@ -63,11 +62,6 @@ trait Controllers
             file_put_contents($newFilePath, file_get_contents($photoPathTG));
         }
         return $request;
-    }
-
-    public function client() : object
-    {
-        return new Client();
     }
 
     public function isAuthorized(): bool
@@ -126,17 +120,20 @@ trait Controllers
         return (strlen($result) < 4000) ? $result : substr($result, 0, 4000) . "...";
     }
 
-    #[NoReturn] public function sendLog(string $data, bool $disable_notification = true, bool $allow_sending_without_reply = true) : void
+    /**
+     * @throws InvalidRequiredParameterException
+     */
+    #[NoReturn] public function sendLog(string $data, bool $disable_notification = true) : void
     {
-        (new Message)->chatId($GLOBALS['request']['message']['chat']['id']
+        (new SendMessage)->chatId($GLOBALS['request']['message']['chat']['id']
                 ?? $GLOBALS['request']['callback_query']['message']['chat']['id']
                 ?? $GLOBALS['request']['callback_query']['from']['id']
                 ?? $GLOBALS['request']['inline_query']['from']['id']
                 ?? null)
             ->text($data)
-            ->disable_notification($disable_notification)
-            ->allow_sending_without_reply($allow_sending_without_reply)
-            ->send();
+            ->disableNotification($disable_notification)
+            ->allowSendingWithoutReply()
+            ->handle();
         die();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Core\Interface;
 
-use Core\Entities\Message;
+use Core\API\Types\Message;
 
 interface Trigger
 {

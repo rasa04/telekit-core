@@ -1,11 +1,12 @@
 <?php
 
-namespace Core\Methods;
+namespace Core\API\Methods;
 
 use Core\Env;
+use Exception;
 use GuzzleHttp\Client;
 
-class AnswerPreCheckoutQuery
+class AnswerPreCheckoutQuery extends Method
 {
     use Env;
 
@@ -23,9 +24,8 @@ class AnswerPreCheckoutQuery
                         'ok' => $ok,
                     ]
                 ]);
-        }
-        catch (\Exception $e) {
-            var_dump($e->getMessage());
+        } catch (Exception $e) {
+            $this->log()->info($e->getMessage());
         }
     }
 }

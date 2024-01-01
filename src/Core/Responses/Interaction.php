@@ -2,9 +2,9 @@
 
 namespace Core\Responses;
 
+use Core\API\Methods\AnswerInlineQuery;
 use Core\Controllers;
 use Core\Env;
-use Core\Methods\AnswerInlineQuery;
 
 abstract class Interaction
 {

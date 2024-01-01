@@ -2,17 +2,17 @@
 
 namespace Core\Responses;
 
+use Core\API\Methods\Message\SendMessage;
 use Core\Controllers;
 use Core\Env;
-use Core\Methods\Message;
 
 abstract class Callback
 {
     use Controllers;
     use Env;
 
-    public function message(): Message
+    public function message(): SendMessage
     {
-        return new Message();
+        return new SendMessage();
     }
 }

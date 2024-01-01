@@ -1,12 +1,12 @@
 <?php
-namespace Core\Methods;
+namespace Core\API\Methods;
 
 use Core\Env;
 use Core\Storage\Storage;
 use CURLFile;
 use Exception;
 
-class MediaGroup extends Action
+class MediaGroup extends Method
 {
     use Env;
     /**
@@ -28,7 +28,7 @@ class MediaGroup extends Action
     /**
      * @throws Exception
      */
-    public function send(bool $writeLogFile = true, bool $saveDataToJson = true) : void
+    public function send(bool $writeLogs = true, bool $saveDataToJson = true) : void
     {
         if (empty($this->response['chat_id'])) throw new Exception('chat id does not exists');
         if (empty($this->response['document'])) throw new Exception('media does not exists');
@@ -44,9 +44,13 @@ class MediaGroup extends Action
         ]);
         $result = curl_exec($curl);
         curl_close($curl);
-        
+
         //сохраняем то что бот сам отправляет
-        if($writeLogFile) $this->log(json_decode($result, 1));
-        if($saveDataToJson) Storage::save(json_decode($result, 1));
+        if($writeLogs) {
+            $this->log()->info($result);
+        }
+        if($saveDataToJson) {
+            Storage::save(json_decode($result, 1));
+        }
     }
 }

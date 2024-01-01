@@ -2,8 +2,8 @@
 
 namespace Core\Responses;
 
-use Core\Methods\AnswerPreCheckoutQuery;
-use Core\Methods\Message;
+use Core\API\Methods\AnswerPreCheckoutQuery;
+use Core\API\Methods\Message\SendMessage;
 
 abstract class Invoice
 {
@@ -19,7 +19,7 @@ abstract class Invoice
 
     public function replyMessage(string $message): void
     {
-        (new Message)
+        (new SendMessage)
             ->chatId($GLOBALS['request']['pre_checkout_query']['from']['id'])
             ->text($message)
             ->send();

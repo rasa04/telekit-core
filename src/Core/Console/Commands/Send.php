@@ -2,8 +2,9 @@
 
 namespace Core\Console\Commands;
 
+use Core\API\Methods\Message\SendMessage;
 use Core\Database\Database;
-use Core\Methods\Message;
+use Core\Exceptions\InvalidRequiredParameterException;
 use Database\models\Chat;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -24,6 +25,9 @@ class Send extends Command
             ->addOption('message', 'm', InputOption::VALUE_REQUIRED);
     }
 
+    /**
+     * @throws InvalidRequiredParameterException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $options = $input->getOptions();
@@ -35,10 +39,10 @@ class Send extends Command
             }
             $chatId = $options["to"];
             $message = $options["message"] ?? "Hi! It's test message from " . getenv("APP_NAME");
-            (new Message)
+            (new SendMessage)
                 ->chatId($chatId)
                 ->text($message)
-                ->send();
+                ->handle();
         }
         elseif ($input->getArgument('all')) {
             new Database();
@@ -47,10 +51,10 @@ class Send extends Command
 
             foreach ($chats as $chat) {
                 try {
-                    (new Message)
+                    (new SendMessage)
                         ->chatId($chat)
                         ->text($message)
-                        ->send();
+                        ->handle();
                     $output->getFormatter()->setStyle("green-bg", new OutputFormatterStyle('black', "green"));
                     $output->writeln("<green-bg> Shipped: $chat </green-bg>");
                 }

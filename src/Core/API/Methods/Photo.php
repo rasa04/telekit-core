@@ -1,11 +1,11 @@
 <?php
-namespace Core\Methods;
+namespace Core\API\Methods;
 
 use Core\Env;
 use Core\Storage\Storage;
 use Exception;
 
-class Photo extends Action
+class Photo extends Method
 {
     use Env;
     /**
@@ -50,7 +50,7 @@ class Photo extends Action
     /**
      * @throws Exception
      */
-    public function send(bool $writeLogFile = true, bool $saveDataToJson = true) : void
+    public function send(bool $writeLogs = true, bool $saveDataToJson = true) : void
     {
         if (empty($this->response['chat_id'])) throw new Exception('chat id does not exists');
         if (empty($this->response['photo'])) throw new Exception('photo does not exists');
@@ -67,7 +67,11 @@ class Photo extends Action
         curl_close($curl);
 
         //сохраняем то что бот сам отправляет
-        if($writeLogFile) $this->log(json_decode($result, 1), 'message.txt');
-        if($saveDataToJson) Storage::save(json_decode($result, 1), 'data.json');
+        if($writeLogs) {
+            $this->log()->info($result);
+        }
+        if($saveDataToJson) {
+            Storage::save(json_decode($result, 1));
+        }
     }
 }

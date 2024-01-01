@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Entities;
+namespace Core\API\Types;
 
 class InlineQuery
 {
