@@ -8,13 +8,13 @@ use Core\API\Methods\Message\DeleteMessage;
 use Core\API\Methods\Message\SendMessage;
 use Core\API\Methods\Photo;
 use Core\API\Methods\SendInvoice;
-use Core\Controllers;
+use Core\Helpers;
 use Core\Env;
 use Core\Exceptions\InvalidMethodException;
 
 abstract class Trigger
 {
-    use Controllers;
+    use Helpers;
     use Env;
 
     public array $lastMessage;

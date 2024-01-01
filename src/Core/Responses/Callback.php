@@ -3,12 +3,12 @@
 namespace Core\Responses;
 
 use Core\API\Methods\Message\SendMessage;
-use Core\Controllers;
+use Core\Helpers;
 use Core\Env;
 
 abstract class Callback
 {
-    use Controllers;
+    use Helpers;
     use Env;
 
     public function message(): SendMessage

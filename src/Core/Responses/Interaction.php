@@ -3,12 +3,12 @@
 namespace Core\Responses;
 
 use Core\API\Methods\AnswerInlineQuery;
-use Core\Controllers;
+use Core\Helpers;
 use Core\Env;
 
 abstract class Interaction
 {
-    use Controllers;
+    use Helpers;
     use Env;
 
     private array $options = [];

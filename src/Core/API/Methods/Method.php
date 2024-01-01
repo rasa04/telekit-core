@@ -2,13 +2,13 @@
 
 namespace Core\API\Methods;
 
-use Core\Controllers;
+use Core\Helpers;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class Method
 {
-    use Controllers;
+    use Helpers;
 
     protected array $response;
     protected const API_ENDPOINT = 'https://api.telegram.org/bot';

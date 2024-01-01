@@ -5,11 +5,12 @@ use Core\API\Methods\Message\SendMessage;
 use Core\Exceptions\InvalidRequiredParameterException;
 use Core\Storage\Storage;
 use Database\models\Chat;
+use GuzzleHttp\Client;
 use JetBrains\PhpStorm\NoReturn;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-trait Controllers
+trait Helpers
 {
     use Env;
 
@@ -19,6 +20,51 @@ trait Controllers
             ->pushHandler(
                 new StreamHandler(sprintf('%s%s',$this->storage_path(), $file))
             );
+    }
+
+    public function transcript($fileLink)
+    {
+        $client = new Client();
+        return json_decode(
+            json: $client->post(
+                uri: 'https://api.openai.com/v1/audio/transcriptions',
+                options: [
+                    'headers' => ['Authorization' => 'Bearer ' . $this->gpt_token()],
+                    'multipart' => [
+                        [
+                            'name'     => 'file',
+                            'contents' => fopen($fileLink, 'r')
+                        ],
+                        [
+                            'name' => 'model',
+                            'contents' => 'whisper-1',
+                        ]
+                    ],
+                    'verify' => false
+                ]
+            )->getBody()->getContents(),
+            associative: 1
+        )['text'];
+    }
+
+    public function chatGPT3($messages): string
+    {
+        $client = new Client();
+        $response = $client->post('https://api.openai.com/v1/chat/completions', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->gpt_token(),
+            ],
+            'json' => [
+                "model" => "gpt-3.5-turbo",
+                "messages" => $messages,
+            ],
+            'verify' => false,
+        ]);
+
+        $result = json_decode($response->getBody()->getContents(), true)['choices'][0]['message']['content'];
+
+        return (strlen($result) < 4000) ? $result : substr($result, 0, 4096);
     }
 
     public function saveFile(bool $withLog = false) : array
@@ -72,11 +118,6 @@ trait Controllers
         return $chat && $chat->toArray()['rights'] > 0;
     }
 
-    public function chat_is_private(): bool
-    {
-        return $GLOBALS['request']['message']['chat']['type'] === 'private';
-    }
-
     public function chat_is_group(): bool
     {
         return ($GLOBALS['request']['message']['chat']['type'] === 'group'
@@ -99,25 +140,6 @@ trait Controllers
         else {
             return $GLOBALS['request']['message']['date'];
         }
-    }
-
-    public function chatGPT($messages): string
-    {
-        $response = $this->client()->post('https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->gpt_token(),
-            ],
-            'json' => [
-                "model" => "gpt-3.5-turbo",
-                "messages" => $messages,
-            ],
-            'verify' => false,
-        ]);
-
-        $result = json_decode($response->getBody()->getContents(), true)['choices'][0]['message']['content'];
-
-        return (strlen($result) < 4000) ? $result : substr($result, 0, 4000) . "...";
     }
 
     /**

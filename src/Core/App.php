@@ -7,7 +7,7 @@ use Core\Storage\Storage;
 
 class App
 {
-    use Controllers;
+    use Helpers;
     use Env;
 
     private static array $triggers;

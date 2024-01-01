@@ -1,14 +1,14 @@
 <?php
 namespace Core\API\Methods;
 
-use Core\Controllers;
+use Core\Helpers;
 use Core\Env;
 use Core\Storage\Storage;
 use Exception;
 
 class AnswerInlineQuery
 {
-    use Controllers;
+    use Helpers;
     use Env;
 
     private array $response;
