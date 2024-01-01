@@ -36,9 +36,10 @@ class App
         $request = json_decode(file_get_contents('php://input'), true);
         if (empty($request)) {
             require_once sprintf('%s%s',$this->appPath(), '/admin.php');
+        } else {
+            $this->request = $request;
         }
 
-        $this->request = $request;
     }
 
     public function handle(bool $writeLogs = true, bool $saveDataToJson = true) : void
