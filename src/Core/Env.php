@@ -14,7 +14,7 @@ trait Env {
     {
         return __DIR__ . "/../../../../../";
     }
-    public function openAIKey(): string
+    public static function openAIKey(): string
     {
         return getenv("OPENAI_KEY");
     }
