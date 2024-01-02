@@ -23,56 +23,6 @@ trait Helpers
             );
     }
 
-    public function openai(): OpenAI\Client
-    {
-        return OpenAI::client(apiKey: $this->openAIKey());
-    }
-
-    public function transcript($fileLink)
-    {
-        $client = new Client();
-        return json_decode(
-            json: $client->post(
-                uri: 'https://api.openai.com/v1/audio/transcriptions',
-                options: [
-                    'headers' => ['Authorization' => 'Bearer ' . $this->openAIKey()],
-                    'multipart' => [
-                        [
-                            'name'     => 'file',
-                            'contents' => fopen($fileLink, 'r')
-                        ],
-                        [
-                            'name' => 'model',
-                            'contents' => 'whisper-1',
-                        ]
-                    ],
-                    'verify' => false
-                ]
-            )->getBody()->getContents(),
-            associative: 1
-        )['text'];
-    }
-
-    public function chatGPT3($messages): string
-    {
-        $client = new Client();
-        $response = $client->post('https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->openAIKey(),
-            ],
-            'json' => [
-                "model" => "gpt-3.5-turbo",
-                "messages" => $messages,
-            ],
-            'verify' => false,
-        ]);
-
-        $result = json_decode($response->getBody()->getContents(), true)['choices'][0]['message']['content'];
-
-        return (strlen($result) < 4000) ? $result : substr($result, 0, 4096);
-    }
-
     public function saveFile(bool $withLog = false) : array
     {
         $request = json_decode(file_get_contents('php://input'), true);

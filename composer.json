@@ -23,9 +23,7 @@
     "ext-pdo": "*",
     "symfony/console": "^6.2",
     "symfony/var-dumper": "^6.2",
-    "monolog/monolog": "^3.5",
-    "openai-php/client": "^0.8.1",
-    "http-interop/http-factory-guzzle": "^1.2"
+    "monolog/monolog": "^3.5"
   },
   "autoload": {
     "psr-4": {
