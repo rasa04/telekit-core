@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use JetBrains\PhpStorm\NoReturn;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use OpenAI;
 
 trait Helpers
 {
@@ -22,6 +23,11 @@ trait Helpers
             );
     }
 
+    public function openai(): OpenAI\Client
+    {
+        return OpenAI::client(apiKey: $this->openAIKey());
+    }
+
     public function transcript($fileLink)
     {
         $client = new Client();
@@ -29,7 +35,7 @@ trait Helpers
             json: $client->post(
                 uri: 'https://api.openai.com/v1/audio/transcriptions',
                 options: [
-                    'headers' => ['Authorization' => 'Bearer ' . $this->gpt_token()],
+                    'headers' => ['Authorization' => 'Bearer ' . $this->openAIKey()],
                     'multipart' => [
                         [
                             'name'     => 'file',
@@ -53,7 +59,7 @@ trait Helpers
         $response = $client->post('https://api.openai.com/v1/chat/completions', [
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->gpt_token(),
+                'Authorization' => 'Bearer ' . $this->openAIKey(),
             ],
             'json' => [
                 "model" => "gpt-3.5-turbo",

@@ -14,9 +14,9 @@ trait Env {
     {
         return __DIR__ . "/../../../../../";
     }
-    public function gpt_token(): string
+    public function openAIKey(): string
     {
-        return getenv("GPT_TOKEN");
+        return getenv("OPENAI_KEY");
     }
     public function file_message(): string
     {
