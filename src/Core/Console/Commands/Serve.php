@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Core\Console\Commands;
 
+use Core\API\Methods\GetUpdates;
+use Core\API\Types\Update;
 use Core\Database\Database;
 use Core\Env;
-use Exception;
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,41 +19,40 @@ class Serve extends Command
     use Env;
 
     public static int $lastUpdate = 0;
-
     public static bool $handled;
+    private GetUpdates $updatesClient;
 
     protected function configure(): void
     {
+        new Database;
         $this->setName('serve')->setDescription('Run polling');
+        $this->updatesClient = new GetUpdates();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->getFormatter()->setStyle("green-bg", new OutputFormatterStyle('black', "green"));
+        $output->getFormatter()
+            ->setStyle(
+            name: "green-bg",
+            style: new OutputFormatterStyle('black', 'green')
+        );
 
-        new Database;
-        $client = new Client();
-        $path = "https://api.telegram.org/bot" . self::token() . "/getUpdates";
-        $response = json_decode($client->get($path, ["verify" => false])->getBody()->getContents(), 1);
-
+        /** @var Update[] $response */
+        $response = $this->updatesClient->pull(self::$lastUpdate);
         if (!empty($response['result'])) {
-            self::$lastUpdate = $response['result'][0]['update_id'];
+            self::$lastUpdate = $response[0]->updateId();
+        } elseif($response['error']) {
+            $output->writeln("<red-bg> ERROR OCCURED WHILE DOING REQUEST </red-bg>");
         }
 
         while (true) {
-            $path = "https://api.telegram.org/bot" . self::token() . "/getUpdates?offset=" . self::$lastUpdate;
-            try {
-                $response = json_decode($client->get($path, ["verify" => false])->getBody()->getContents(), 1);
-            } catch (Exception $e) {
-                sleep(2);
-                $response = json_decode($client->get($path, ["verify" => false])->getBody()->getContents(), 1);
-            }
+            /** @var Update[] $response */
+            $response = $this->updatesClient->pull(self::$lastUpdate);
 
-            // Process the updates
-            if (empty($response['result'])) {
+            if ($response['error']) {
                 continue;
             }
-            if (isset($GLOBALS['request']) && $response['result'][0]['update_id'] === $GLOBALS['request']['update_id']) {
+            if (isset($GLOBALS['request']) && $response[0]->updateId() === $GLOBALS['request']['update_id']) {
                 self::$lastUpdate += 1;
                 continue;
             }
@@ -61,12 +63,7 @@ class Serve extends Command
             var_dump($GLOBALS['request']);
             self::$lastUpdate+=1;
             $output->writeln("<green-bg> SUCCESSFUL HANDLED </green-bg>");
-            sleep(2);
+            sleep(1);
         }
-    }
-
-    private function GetUpdates()
-    {
-
     }
 }

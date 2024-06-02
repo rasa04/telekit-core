@@ -1,9 +1,12 @@
 <?php
 
-namespace Core\API\Types;
+namespace Core\API\Types\Message;
+
+use Core\API\Types\Chat;
+use Core\API\Types\MessageId;
 
 /**
- * Interface for different message states
+ * Interface for different message types
  */
 interface MessageInterface
 {

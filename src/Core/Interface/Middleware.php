@@ -3,7 +3,7 @@
 namespace Core\Interface;
 
 use Core\API\Types\CallbackQuery;
-use Core\API\Types\Message;
+use Core\API\Types\Message\Message;
 
 interface Middleware
 {

@@ -2,7 +2,7 @@
 namespace Core;
 
 use Core\API\Types\CallbackQuery;
-use Core\API\Types\Message;
+use Core\API\Types\Message\Message;
 use Core\Storage\Storage;
 
 class App

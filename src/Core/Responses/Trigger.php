@@ -8,10 +8,10 @@ use Core\API\Methods\Message\DeleteMessage;
 use Core\API\Methods\Message\SendMessage;
 use Core\API\Methods\Photo;
 use Core\API\Methods\SendInvoice;
-use Core\API\Types\Message;
+use Core\API\Types\Message\Message;
+use Core\Env;
 use Core\Exceptions\InvalidRequiredParameterException;
 use Core\Helpers;
-use Core\Env;
 
 abstract class Trigger
 {

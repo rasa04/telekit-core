@@ -1,7 +1,7 @@
 <?php
 namespace Responses\Triggers;
 
-use Core\API\Types\Message;
+use Core\API\Types\Message\Message;
 use Core\Responses\Trigger;
 
 class Sample extends Trigger implements \Core\Interface\Trigger {

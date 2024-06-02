@@ -3,7 +3,7 @@
 namespace Core\API\Methods\Message;
 
 use Core\API\Methods\Method;
-use Core\API\Types\Message;
+use Core\API\Types\Message\Message;
 use Core\Env;
 use Core\Exceptions\InvalidRequiredParameterException;
 use Core\Storage\Storage;

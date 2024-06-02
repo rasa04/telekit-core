@@ -1,12 +1,18 @@
 <?php
 
-namespace Core\API\Types;
+namespace Core\API\Types\Message;
+
+use Core\API\Types\Chat;
+use Core\API\Types\MessageEntity;
+use Core\API\Types\MessageId;
+use Core\API\Types\User;
+use Core\API\Types\Voice;
 
 /**
  * This object represents a message.
  * @link https://core.telegram.org/bots/api#message
  */
-class Message extends Type implements MessageInterface
+class Message extends MessageAbstract
 {
     protected int $date;
     protected Chat $chat;
@@ -18,11 +24,12 @@ class Message extends Type implements MessageInterface
 
     public function __construct(array $data)
     {
-        $this->set('date', $data['date']);
-        $this->set(propertyName: 'chat', value: new Chat(data: $data['chat']));
-        if (isset($data['message_id'])) {
-            $this->set(propertyName: 'messageId', value: new MessageId($data['message_id']));
-        }
+        parent::__construct(
+            chat: $data['chat'],
+            messageId: $data['message_id'] ?? null,
+            date: $data['date'] ?? InaccessibleMessage::DATE
+        );
+
         if (isset($data['text'])) {
             $this->set(propertyName: 'text', value: $data['text']);
         }
@@ -43,11 +50,6 @@ class Message extends Type implements MessageInterface
         return $this;
     }
 
-    public function chat(?Chat $chat = null): Chat
-    {
-        return $this->set('chat', $chat);
-    }
-
     public function from(?User $from = null): ?User
     {
         return $this->set('from', $from);
@@ -58,11 +60,6 @@ class Message extends Type implements MessageInterface
         $text = $this->set(propertyName: 'text', value: $text);
 
         return $withLowerCase && $text !== null ? strtolower($text) : $text;
-    }
-
-    public function date(): int
-    {
-        return $this->get('date');
     }
 
     public function entities(?array $entities = null): array
@@ -82,18 +79,6 @@ class Message extends Type implements MessageInterface
     public function voice(?Voice $voice = null): ?Voice
     {
         return $this->set('voice', $voice);
-    }
-
-    public function messageId(MessageId|int|null $messageId = null): MessageId|int|null
-    {
-        if ($messageId === null) {
-            return $this->messageId?->messageId();
-        }
-
-        return $this->set(
-            propertyName: 'messageId',
-            value: is_int($messageId) ? new MessageId($messageId) : $messageId
-        );
     }
 
     public function toArray(): array
